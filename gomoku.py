@@ -10,30 +10,59 @@ This is a placeholder that you should remove once you modify the function.
 """
 
 def is_empty(board):
+    """
+    Checks if the Gomoku board is empty.
+
+    Parameters:
+    - board: 2D list representing the Gomoku board.
+
+    Returns:
+    - True if the board is empty, False otherwise.
+    """
+    # Check if the given board is equal to the result of make_empty_board with the same size
+    # This is a simple way to determine if the board is empty, as it compares with a newly created empty board
     if board == make_empty_board(len(board[1])):
         return True
+    else:
+        return False
 
-    
 def is_bounded(board, y_end, x_end, length, d_y, d_x):
-    #                  7       2      3      1    0
-    # If both indexes exist for the next square in the sequence and it's blank
-    # 7 + 1 < 8 failed
-    # If one of the if statements are true semi-open, if both, open, if none, closed
-    # right now, the second statement isn't being checked if the first is false
+    """
+    Determines the bounding status of a sequence on the Gomoku board.
+
+    Parameters:
+    - board: 2D list representing the Gomoku board.
+    - y_end: Ending y-coordinate of the sequence.
+    - x_end: Ending x-coordinate of the sequence.
+    - length: Length of the sequence being checked.
+    - d_y: Direction of movement along the y-axis (1 for downward, -1 for upward, 0 for no movement).
+    - d_x: Direction of movement along the x-axis (1 for right, -1 for left, 0 for no movement).
+
+    Returns:
+    - "OPEN" if the sequence is open (both ends are unblocked),
+    - "SEMIOPEN" if the sequence is semi-open (one end is unblocked),
+    - "CLOSED" if the sequence is closed (neither end is unblocked).
+    """
+    # Initialize a counter to track the number of unblocked ends
     count = 0
+
+    # Check if the square on the next position in the sequence exists and is blank
     if 0 <= y_end + d_y < len(board) and 0 <= x_end + d_x < len(board[y_end + d_y]) and board[y_end + d_y][x_end + d_x] == ' ':
-        # If both indexes exist for the square before the first and it's blank
-        # 7 - 3*1 + 1
+        # If the next square in the sequence exists and is blank, increment the counter
         count += 1
-     # 0 <=
-    if 0 <= y_end - length*d_y < len(board) and 0 <= x_end - length*d_x < len(board[y_end - length*d_y]) and board[y_end - length*d_y][x_end - length*d_x] == ' ':
+
+    # Check if the square on the previous position in the sequence exists and is blank
+    if 0 <= y_end - length * d_y < len(board) and 0 <= x_end - length * d_x < len(board[y_end - length * d_y]) and board[y_end - length * d_y][x_end - length * d_x] == ' ':
+        # If the previous square in the sequence exists and is blank, increment the counter
         count += 1
-    
+
+    # Based on the count, determine the bounding status of the sequence
     if count == 2:
         return "OPEN"
     elif count == 1:
         return "SEMIOPEN"
-    return "CLOSED"
+    else:
+        return "CLOSED"
 
 def detect_row(board, col, y_start, x_start, length, d_y, d_x):
     open_seq_count, semi_open_seq_count = 0, 0
